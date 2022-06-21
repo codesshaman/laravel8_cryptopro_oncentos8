@@ -3,10 +3,10 @@ Minimal docker container image (219 MB): laravel with nginx and php-fpm without 
 
 Your need docker and docker-compose in your operation system.
 
-Clone: git clone https://github.com/codesshaman/laravel8_cryptopro_oncentos.git
+Clone: git clone https://github.com/codesshaman/laravel8_cryptopro_oncentos8.git
 
 GO TO FOLDER:
-cd laravel8_cryptopro_oncentos
+cd laravel8_cryptopro_oncentos8
 
 INSTALL LARAVEL:
 
