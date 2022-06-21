@@ -19,30 +19,36 @@ RUN groupadd user && useradd --create-home user -g user && \
     sed -i "s/user:x:1000:1000/user:x:${USER_ID}:${USER_ID}/g" /etc/passwd && \
     cp systemctlpatch/systemctl.py /usr/bin/systemctl
 
+# Обновляю список репозиториев
+
+RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && \
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
+
 # Устанавливаю весь необходимый софт:
 
-RUN yum install -y boost-devel \
-    lsb gcc-c++ wget automake \
-    autoconf unzip sqlite-devel mc nano
+RUN yum update -y && yum install boost-devel \
+    lsb gcc-c++ wget automake autoconf unzip \
+    sqlite-devel mc nano php-devel
 
 # Устанавливаю php-devel 7.4.30:
 
-# RUN cd /tmp/php7_sources && rpm -i libedit-3.0-12.20121213cvs.el7.x86_64.rpm && \
-#     rpm -i php74-common-7.4.30-1.el7.ius.x86_64.rpm && rpm -i php74-cli-7.4.30-1.el7.ius.x86_64.rpm && \
-#     rpm -i libtool-2.4.2-22.el7_3.x86_64.rpm && rpm -i libsepol-devel-2.5-10.el7.x86_64.rpm && \
-#     rpm -i pcre-devel-8.32-17.el7.x86_64.rpm && rpm -i libselinux-devel-2.5-15.el7.x86_64.rpm && \
-#     rpm -i libkadm5-1.15.1-50.el7.x86_64.rpm && rpm -i libcom_err-devel-1.42.9-19.el7.x86_64.rpm && \
-#     rpm -i keyutils-libs-devel-1.5.8-3.el7.x86_64.rpm && rpm -i libverto-devel-0.2.5-4.el7.x86_64.rpm && \
-#     rpm -i krb5-devel-1.15.1-50.el7.x86_64.rpm && rpm -i crypto-policies-20170816-1.git2618a6c.el7.noarch.rpm && \
-#     rpm -i openssl11-libs-1.1.1k-3.el7.x86_64.rpm && rpm -i openssl11-devel-1.1.0i-1.el7.x86_64.rpm
+#RUN cd /tmp/php7_sources && rpm -i libedit-3.0-12.20121213cvs.el7.x86_64.rpm && \
+#    rpm -i php74-common-7.4.30-1.el7.ius.x86_64.rpm && rpm -i php74-cli-7.4.30-1.el7.ius.x86_64.rpm && \
+#    rpm -i libtool-2.4.2-22.el7_3.x86_64.rpm && rpm -i libsepol-devel-2.5-10.el7.x86_64.rpm && \
+#    rpm -i pcre-devel-8.32-17.el7.x86_64.rpm && rpm -i libselinux-devel-2.5-15.el7.x86_64.rpm && \
+#    rpm -i libkadm5-1.15.1-50.el7.x86_64.rpm && rpm -i libcom_err-devel-1.42.9-19.el7.x86_64.rpm && \
+#    rpm -i keyutils-libs-devel-1.5.8-3.el7.x86_64.rpm && rpm -i libverto-devel-0.2.5-4.el7.x86_64.rpm && \
+#    rpm -i krb5-devel-1.15.1-50.el7.x86_64.rpm && rpm -i crypto-policies-20170816-1.git2618a6c.el7.noarch.rpm && \
+#    rpm -i openssl11-libs-1.1.1k-3.el7.x86_64.rpm && rpm -i openssl11-devel-1.1.0i-1.el7.x86_64.rpm
 
 #    rpm -i krb5-devel-1.15.1-50.el7.x86_64.rpm && \
      
 
 # Устанавливаю libxml2-devel:
 
-RUN cd /tmp/libxml2.0 && rpm -i xz-devel-5.2.2-1.el7.x86_64.rpm && \
-    rpm -i zlib-devel-1.2.7-18.el7.x86_64.rpm && rpm -i libxml2-devel-2.9.1-6.el7.5.x86_64.rpm
+#RUN cd /tmp/libxml2.0 && rpm -i xz-devel-5.2.2-1.el7.x86_64.rpm && \
+#    rpm -i zlib-devel-1.2.7-18.el7.x86_64.rpm && rpm -i libxml2-devel-2.9.1-6.el7.5.x86_64.rpm
 
 # Устанавливаю КриптоПРО:
 
