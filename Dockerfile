@@ -29,7 +29,7 @@ RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d
 
 RUN yum update -y && yum install boost-devel \
     lsb gcc-c++ wget automake autoconf unzip \
-    sqlite-devel mc nano php-devel
+    sqlite-devel mc nano php-devel libxml2-devel
 
 # Устанавливаю php-devel 7.4.30:
 
