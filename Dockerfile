@@ -16,7 +16,7 @@ COPY ./sources .
 # Создаю пользователя с тем же UID, что и в системе:
 
 RUN groupadd user && useradd --create-home user -g user && \
-    sed -i "s/user:x:1000:1000/user:x:${USER_ID}:${USER_ID}/g" /etc/passwd && \
+    sed -i "s/user:x:1000:1000/user:x:${USER_ID}:${USER_ID}/g" /etc/passwd &&\
     cp systemctlpatch/systemctl.py /usr/bin/systemctl
 
 # Обновляю список репозиториев
@@ -27,7 +27,7 @@ RUN cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d
 
 # Устанавливаю весь необходимый софт:
 
-RUN yum update -y && yum install boost-devel \
+RUN yum update -y && yum install -y boost-devel \
     lsb gcc-c++ wget automake autoconf unzip \
     sqlite-devel mc nano php-devel libxml2-devel
 
@@ -35,6 +35,7 @@ RUN yum update -y && yum install boost-devel \
 
 # Устанавливаю КриптоПРО:
 
+#chmod a+x /usr/bin/systemctl 
 RUN chmod a+x /usr/bin/systemctl && cd /tmp/linux-amd64_rpm && chmod +x install.sh && ./install.sh && \
     rpm -i lsb-cprocsp-devel-5.0.12500-6.noarch.rpm && cd /tmp/cades_linux && \
     rpm -i cprocsp-pki-phpcades-64-2.0.14589-1.amd64.rpm && rpm -i cprocsp-pki-cades-64-2.0.14589-1.amd64.rpm && \
@@ -44,11 +45,12 @@ RUN chmod a+x /usr/bin/systemctl && cd /tmp/linux-amd64_rpm && chmod +x install.
     ##### update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 10 && \
     cp /tmp/php7_support.patch/php7_support.patch /opt/cprocsp/src/phpcades && \
     cd /opt/cprocsp/src/phpcades && patch -p0 < ./php7_support.patch && \
-    eval `/opt/cprocsp/src/doxygen/CSP/../setenv.sh --64` && make -f Makefile.unix && \
-    cp /opt/cprocsp/src/phpcades/libphpcades.so $(php -i | grep 'extension_dir => ' | awk '{print $3}')/phpcades.so && \
-    ln -s /opt/cprocsp/src/phpcades/libphpcades.so $(php -i | grep 'extension_dir => ' | awk '{print $3}')/libcppcades.so && \
-    #echo 'extension=phpcades.so' >> /etc/php/7.4/cli/php.ini && cd /tmp/php7_sources && \
-    #echo 'error_log=/var/log/phpfpm_errors.log' >> /etc/php/7.4/cli/php.ini && \
+    eval `/opt/cprocsp/src/doxygen/CSP/../setenv.sh --64` && make -f Makefile.unix
+    #cp /opt/cprocsp/src/phpcades/libphpcades.so $(php -i | grep 'extension_dir => ' | awk '{print $3}')/phpcades.so && \
+    #ln -s /opt/cprocsp/src/phpcades/libphpcades.so $(php -i | grep 'extension_dir => ' | awk '{print $3}')/libcppcades.so && \
+    #echo 'extension=phpcades.so' >> /etc/php.ini
+    #cd /tmp/php7_sources && \
+    #echo 'error_log=/var/log/phpfpm_errors.log' >> /etc/php.ini && \
     #rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && service php7.4-fpm start
 
 # Переключаюсь на созданного пользователя и открываю рабочий порт:
